@@ -1,1 +1,4 @@
 /telegram_collector_test/
+/telegram_collector.egg-info/
+/dist/
+/build/
