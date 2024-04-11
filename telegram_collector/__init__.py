@@ -130,4 +130,7 @@ class TelegramCollector:
         asyncio.run(self.__do_after_init(self.__send_history_message_src_to_dest))
 
     def print_my_dialogs(self):
-        asyncio.run(self.__do_after_init(print_dialogs))
+        def wrapper():
+            print_dialogs(self.my_dialogs)
+
+        asyncio.run(self.__do_after_init(wrapper))

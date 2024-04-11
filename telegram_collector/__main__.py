@@ -3,7 +3,6 @@ import sys
 
 from .__init__ import *
 import configparser
-import python_socks
 
 
 def new_telegram_collector():
