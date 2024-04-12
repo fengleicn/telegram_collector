@@ -28,8 +28,9 @@ class TelegramCollector:
         self.client = None
 
     async def __do_init(self):
-        self.proxy_type = python_socks.ProxyType.SOCKS5
-        self.proxy = (self.proxy_type, self.proxy_ip, self.proxy_port)
+        if self.use_proxy:
+            self.proxy_type = python_socks.ProxyType.SOCKS5
+            self.proxy = (self.proxy_type, self.proxy_ip, self.proxy_port)
         if not self.inited:
             self.client = TelegramClient(self.session_name, self.api_id, self.api_hash, proxy=self.proxy)
             await self.client.start()
