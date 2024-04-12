@@ -112,7 +112,7 @@ class TelegramCollector:
         self.client.add_event_handler(self.__callback_send_message, events.NewMessage(incoming=True))
         try:
             while True:
-                await asyncio.sleep(1)
+                await asyncio.sleep(1000)
         finally:
             await self.__terminate_client()
 
