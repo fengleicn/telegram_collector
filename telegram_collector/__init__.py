@@ -108,6 +108,7 @@ class TelegramCollector:
             src_dialog_id = event.message.chat_id
             print('get message',
                   'time:', datetime.datetime.now().isoformat(),
+                  'chat_id:', src_dialog_id,
                   'content:', message.text,
                   'is_vid_or_pic:', message_is_video_or_photo(message))
             if message_is_video_or_photo(message) and src_dialog_id in self.src_dialog_ids:
