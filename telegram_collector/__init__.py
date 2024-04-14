@@ -118,7 +118,7 @@ class TelegramCollector:
 
     # 流式汇总增量消息
     async def __send_new_message_src_to_dest(self):
-        self.client.add_event_handler(self.__callback_send_message, events.NewMessage(incoming=True))
+        self.client.add_event_handler(self.__callback_send_message, events.NewMessage(chats=self.src_dialogs, incoming=True))
         try:
             while True:
                 await asyncio.sleep(1000)
