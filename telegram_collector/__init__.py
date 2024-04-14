@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import math
 
 import python_socks
@@ -102,11 +103,17 @@ class TelegramCollector:
             await self.__terminate_client()
 
     async def __callback_send_message(self, event):
-        message = event.message
-        src_dialog_id = event.message.chat_id
-        print('get: ', message)
-        if message_is_video_or_photo(message) and src_dialog_id in self.src_dialog_ids:
-            await self.__send_messages([message])
+        try:
+            message = event.message
+            src_dialog_id = event.message.chat_id
+            print('get message',
+                  'time:', datetime.datetime.now().isoformat(),
+                  'content:', message.text,
+                  'is_vid_or_pic:', message_is_video_or_photo(message))
+            if message_is_video_or_photo(message) and src_dialog_id in self.src_dialog_ids:
+                await self.__send_messages([message])
+        except Exception as e:
+            print('!!!ERROR!!!', e)
 
     # 流式汇总增量消息
     async def __send_new_message_src_to_dest(self):
