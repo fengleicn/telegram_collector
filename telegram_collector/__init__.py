@@ -129,8 +129,8 @@ class TelegramCollector:
             # trigger
             for i in self.src_dialogs:
                 messages = await self.client.get_messages(i)
-                for message in messages:
-                    print_message(message)
+                # for message in messages:
+                #     print_message(message)
             await asyncio.sleep(2)
 
     async def __do_after_init(self, func):
