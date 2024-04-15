@@ -106,11 +106,7 @@ class TelegramCollector:
         try:
             message = event.message
             src_dialog_id = event.message.chat_id
-            print('get message',
-                  'time:', datetime.datetime.now().isoformat(),
-                  'chat_id:', src_dialog_id,
-                  'content:', message.text,
-                  'is_vid_or_pic:', message_is_video_or_photo(message))
+            print_message(message)
             if message_is_video_or_photo(message) and src_dialog_id in self.src_dialog_ids:
                 await self.__send_messages([message])
         except Exception as e:
@@ -118,15 +114,24 @@ class TelegramCollector:
 
     # 流式汇总增量消息
     async def __send_new_message_src_to_dest(self):
-        self.client.add_event_handler(self.__callback_send_message, events.NewMessage(chats=self.src_dialogs, incoming=True))
+        self.client.add_event_handler(self.__callback_send_message,
+                                      events.NewMessage(chats=self.src_dialogs, incoming=True))
+        await self.__loop()
+
+    async def __loop(self):
         try:
-            while True:
-                # trigger
-                for i in self.src_dialogs():
-                    self.client.get_messages(i)
-                await asyncio.sleep(2)
+            await self.__trigger_get_message()
         finally:
             await self.__terminate_client()
+
+    async def __trigger_get_message(self):
+        while True:
+            # trigger
+            for i in self.src_dialogs():
+                messages = self.client.get_messages(i)
+                for message in messages:
+                    print_message(message)
+            await asyncio.sleep(2)
 
     async def __do_after_init(self, func):
         await self.__do_init()

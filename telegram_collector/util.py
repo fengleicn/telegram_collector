@@ -1,3 +1,6 @@
+import datetime
+
+
 def default_key_func(e):
     return get_message_size(e)
 
@@ -43,6 +46,14 @@ def sort_messages(messages):
 def print_dialogs(dialogs):
     for dialog in dialogs:
         print(dialog.id, dialog.title)
+
+
+def print_message(message):
+    print('get message',
+          'time:', datetime.datetime.now().isoformat(),
+          'chat_id:', message.chat_id,
+          'content:', message.text,
+          'is_vid_or_pic:', message_is_video_or_photo(message))
 
 
 def get_video_or_photo_message(messages):
