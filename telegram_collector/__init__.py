@@ -113,14 +113,27 @@ class TelegramCollector:
             print('!!!ERROR!!!', e)
 
     # 流式汇总增量消息
-    async def __send_new_message_src_to_dest(self):
+    async def __send_new_message_src_to_dest_v1(self):
         self.client.add_event_handler(self.__callback_send_message,
                                       events.NewMessage(chats=self.src_dialogs, incoming=True))
         await self.__loop()
 
+    async def __send_new_message_src_to_dest_v2(self):
+        d = self.src_dialogs[0]
+        ms = await self.client.get_messages(d)
+        m = ms[0]
+        mid = m.id
+        while True:
+            ms = await self.client.get_messages(d, min_id=mid)
+            mid = ms[0].id
+            for message in ms:
+                if message_is_video_or_photo(message):
+                    await self.__send_messages([message])
+
     async def __loop(self):
         try:
-            await asyncio.sleep(2)
+            while True:
+                await asyncio.sleep(2)
         finally:
             await self.__terminate_client()
 
@@ -132,7 +145,7 @@ class TelegramCollector:
             func()
 
     def send_new_message_src_to_dest(self):
-        asyncio.run(self.__do_after_init(self.__send_new_message_src_to_dest))
+        asyncio.run(self.__do_after_init(self.__send_new_message_src_to_dest_v2))
 
     def send_history_message_src_to_dest(self):
         asyncio.run(self.__do_after_init(self.__send_history_message_src_to_dest))
