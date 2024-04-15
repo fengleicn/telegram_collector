@@ -127,7 +127,7 @@ class TelegramCollector:
     async def __trigger_get_message(self):
         while True:
             # trigger
-            for i in self.src_dialogs():
+            for i in self.src_dialogs:
                 messages = self.client.get_messages(i)
                 for message in messages:
                     print_message(message)
