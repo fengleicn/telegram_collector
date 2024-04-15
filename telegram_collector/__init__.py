@@ -121,7 +121,10 @@ class TelegramCollector:
         self.client.add_event_handler(self.__callback_send_message, events.NewMessage(chats=self.src_dialogs, incoming=True))
         try:
             while True:
-                await asyncio.sleep(1000)
+                # trigger
+                for i in self.src_dialogs():
+                    self.client.get_messages(i)
+                await asyncio.sleep(2)
         finally:
             await self.__terminate_client()
 
