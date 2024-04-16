@@ -119,20 +119,25 @@ class TelegramCollector:
         await self.__loop()
 
     async def __send_new_message_src_to_dest_v2(self):
-        target_dialog = self.src_dialogs[0]
+        async with asyncio.TaskGroup() as tg:
+            for src_dialog in self.src_dialogs:
+                tg.create_task(self.__do_send_new_message_src_to_dest_v2(src_dialog))
+
+    async def __do_send_new_message_src_to_dest_v2(self, target_dialog):
         messages = await self.client.get_messages(target_dialog)
-        last_message = messages[0]
-        message_min_id = last_message.id
+        message_min_id = messages[0].id
         while True:
-            await asyncio.sleep(5)
             messages = await self.client.get_messages(target_dialog, min_id=message_min_id, limit=None)
-            print("length: ", len(messages), " message-id: ", list(map(lambda a: a.id, messages)))
             if len(messages) == 0:
                 continue
             message_min_id = messages[0].id
+            for message in messages:
+                print_message(message)
             for message in filter(lambda a: message_is_video_or_photo(a), messages):
                 if message_is_video_or_photo(message):
-                    await self.__send_messages([message])
+                    await self.__send_messages([message], delay=0.1)
+            await asyncio.sleep(5)
+
 
     async def __loop(self):
         try:
