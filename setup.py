@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='telegram_collector',
-    version='0.2.18',
+    version='0.2.19',
     author='fengleicn',
     author_email='fengleisemail@gmail.com',
     url='https://github.com/fengleicn/telegram_collector',

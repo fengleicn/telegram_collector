@@ -75,7 +75,7 @@ class TelegramCollector:
         count = 0
         for message in messages:
             count += 1
-            print(count, end='...[ok] # ')
+            print(count, end='...[ok] # ', flush=True)
             for dest_dialog in self.dest_dialogs:
                 try:
                     await self.client.send_message(entity=dest_dialog, message=message)
