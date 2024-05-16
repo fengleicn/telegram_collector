@@ -3,4 +3,5 @@
 /dist/
 /build/
 /tg.ini
+/tg-server.ini
 /tg_session.session
