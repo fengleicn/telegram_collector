@@ -41,29 +41,23 @@ def create_example_config_file():
         f.write(s)
 
 
-def _get_opt():
-    opts, args = getopt.getopt(sys.argv[1:], "abcp")
-    for opt, _ in opts:
-        return opt
-    # exit
-    print("-a: collect new messages\n"
-          "-b: collect history messages\n"
-          "-c: create an example config\n"
-          "-p: print dialogs information\n")
-    exit(1)
-
-
 def main():
-    opt = _get_opt()
-    collector = new_telegram_collector()
-    if opt == '-c':  # create example config
-        create_example_config_file()
-    elif opt == '-a':  # new message
-        collector.send_new_message_src_to_dest()
-    elif opt == '-b':  # history message
-        collector.send_history_message_src_to_dest()
-    elif opt == '-p':
-        collector.print_my_dialogs()
+    opts, args = getopt.getopt(sys.argv[1:], "hct:")
+    for k, v in opts:
+        if k == 'h':
+            print("-t rtm: task -> collect real-time  messages\n"
+                  "-t hm : task -> collect historical messages\n"
+                  "-n    : new an example config\n"
+                  "-p    : print dialogs information\n")
+        elif k == 'c':
+            create_example_config_file()
+        elif k == 't':
+            collector = new_telegram_collector()
+            if v == 'rtm':
+                collector.send_new_message_src_to_dest()
+            elif v == 'hm':
+                collector.send_history_message_src_to_dest()
+
 
 
 if __name__ == '__main__':
